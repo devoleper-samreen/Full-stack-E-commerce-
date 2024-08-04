@@ -32,6 +32,8 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
+//***********************************************/
+
 const deleteOnCloudinary = async (publicId) => {
 
     try {
@@ -49,7 +51,6 @@ const deleteOnCloudinary = async (publicId) => {
         return result;
       } catch (error) {
         throw new Error(`Failed to delete file: ${error.message}`);
-        return null
       }
 }
 

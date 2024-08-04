@@ -34,7 +34,9 @@ try {
     res.status(500).json({ error: 'Something went wrong' });
 }
 
-});
+})
+
+//************************************************/
 
 const sortProduct = AsyncHandler(async (req, res) => {
     const { sortby, maxprice, category } = req.body;

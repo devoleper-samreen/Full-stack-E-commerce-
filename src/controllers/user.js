@@ -2,6 +2,8 @@ import {AsyncHandler} from "../utils/AsyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {User} from "../models/user.js"
+import nodemailer from "nodemailer"
+import bcrypt from "bcrypt"
 
 
 const generateAccessAndRefereshToken = async (userId) => {
@@ -28,6 +30,8 @@ const generateAccessAndRefereshToken = async (userId) => {
         throw new ApiError(400, "something went wrong")
     }
 }
+
+//*************************************/
 
 const registerUser = AsyncHandler(async (req, res) => {
     //read details from frontend
@@ -79,6 +83,8 @@ const registerUser = AsyncHandler(async (req, res) => {
 
 })
 
+//**********************************************/
+
 const loginUser = AsyncHandler( async (req, res) => {
     //user se email password lo
     //check karo email exist karti hain ya nahi
@@ -111,7 +117,7 @@ const loginUser = AsyncHandler( async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: false
+        secure: true
     }
 
     res.status(200).cookie("accessToken", accessToken, options).cookie("refereshToken", refereshToken, options).json(
@@ -119,6 +125,8 @@ const loginUser = AsyncHandler( async (req, res) => {
     )
 
 } )
+
+//*****************************************/
 
 const logoutUser = AsyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
@@ -135,7 +143,7 @@ const logoutUser = AsyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: false
+        secure: true
     }
 
     return res.status(200).clearCookie("accessToken", options).clearCookie("refreshToken", options).json(
@@ -144,5 +152,93 @@ const logoutUser = AsyncHandler(async (req, res) => {
  
 })
 
-export {registerUser, loginUser, logoutUser}
+//***************************************/
+
+const forgetPassword = AsyncHandler(async (req, res) => {
+    const {email} = req.body
+    
+    const user = await User.findOne({email})
+
+    if(!user){
+        throw new ApiError(400, "user not found")
+    }
+
+    const token = crypto.randomBytes(32).toString("hex")
+
+    user.resetPasswordToken = token
+    user.resetPasswordExpires = Date.now() + 3600000
+
+    await user.save({validateBeforeSave: false})
+
+    const transporter = nodemailer.createTransport(
+        {
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_ADMIN,
+                pass: process.env.EMAIL_PASS
+            }
+        }
+    )
+
+    const mailOptions = {
+        to: user.email,
+        from: process.env.EMAIL_ADMIN,
+        subject: 'Password Reset',
+        text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+               Please click on the following link, or paste this into your browser to complete the process:\n\n
+               http://${req.headers.host}/reset/${token}\n\n
+               If you did not request this, please ignore this email and your password will remain unchanged.\n`
+      }
+
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+           res.status(500).json(
+            new ApiError(500, "Error in sending email")            
+        )
+        }
+        res.status(200).json(
+            new ApiResponse(200, {}, "Password reset link has been sent to your email")
+        )
+      })
+})
+
+//**********************************************/
+
+const resetPassword = AsyncHandler(async (req, res) => {
+
+    const {token, newPassword, confirmPassword} = req.body
+
+    if ( newPassword != confirmPassword) {
+        throw new ApiError(400, "newPassword and confirmPassword is not same")
+        
+    }
+
+    const user = await User.findOne(
+        {
+            resetPasswordToken: token
+        }
+    )
+
+    if (Date.now() > user.resetPasswordExpires) {
+        throw new ApiError(400, 'Token expired');
+      }
+
+    if ( !user ) {
+        throw new ApiError(400, "invalid or expires token")
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10)
+
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpires = undefined
+
+    await user.save({validateBeforeSave: false})
+
+    res.status(200).json(
+        new ApiResponse(200, newPassword, "Password has been reset successfully")
+    )
+
+})
+
+export {registerUser, loginUser, logoutUser, forgetPassword, resetPassword}
 

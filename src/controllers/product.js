@@ -52,7 +52,7 @@ const createProduct = AsyncHandler(async (req, res) => {
    }
 })
 
-//****************************** *//
+//******************************************//
 
 const readLatestProduct = AsyncHandler(async (req, res) => {
     try {
@@ -73,7 +73,6 @@ const readLatestProduct = AsyncHandler(async (req, res) => {
         
     }
     
-
 })
 
 const readSingleProduct = AsyncHandler(async (req, res) => {
@@ -81,13 +80,15 @@ const readSingleProduct = AsyncHandler(async (req, res) => {
 
 })
 
+//***********************************************/
+
 const readAllProduct = AsyncHandler(async (req, res) => {
     
     
 
 })
 
-//*************************************/
+//**********************************************/
 
 const updateProduct = AsyncHandler(async (req, res) => {
     const {productId} = req.params
@@ -136,7 +137,8 @@ const updateProduct = AsyncHandler(async (req, res) => {
      )
 
 })
-//*****************************************/
+
+//**********************************************/
 
 const productPhotoUpdate = AsyncHandler(async (req, res) => {
 
@@ -195,6 +197,7 @@ const productPhotoUpdate = AsyncHandler(async (req, res) => {
      )
 
 })
+
 //************************************************/
 
 const deleteProduct = AsyncHandler(async (req, res) => {
@@ -232,6 +235,7 @@ const deleteProduct = AsyncHandler(async (req, res) => {
 
 export {
     createProduct,
+    readLatestProduct,
     updateProduct,
     productPhotoUpdate,
     deleteProduct

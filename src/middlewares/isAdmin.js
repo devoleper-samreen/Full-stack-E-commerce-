@@ -5,14 +5,14 @@ import { User } from "../models/user.js"
     const { id } = req.query;
 
     if(!id){
-        console.log("login kar pehle")
+        console.log("you are not login")
         return next()
     }
 
     const user = await User.findById(id) 
     
     if(!user){
-        console.log("fake id deta hain saale")
+        console.log("user not found")
         return next()
     }
 
