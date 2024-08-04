@@ -76,16 +76,35 @@ const readLatestProduct = AsyncHandler(async (req, res) => {
 })
 
 const readSingleProduct = AsyncHandler(async (req, res) => {
-    
 
+        const { productId } = req.params;
+    
+        const product = await Product.findById(productId)
+    
+        if (!product) {
+            throw new ApiError(404, "Product not found")
+        }
+    
+        res.status(200).json(
+            new ApiResponse(200, product, "Product retrieved successfully")
+        )
+    
 })
 
 //***********************************************/
 
 const readAllProduct = AsyncHandler(async (req, res) => {
     
-    
+    const products = await Product.find();
 
+    if (!products) {
+        throw new ApiError(404, "No products found")
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, products, "Products retrieved successfully")
+    )
+    
 })
 
 //**********************************************/
@@ -236,6 +255,8 @@ const deleteProduct = AsyncHandler(async (req, res) => {
 export {
     createProduct,
     readLatestProduct,
+    readSingleProduct,
+    readAllProduct,
     updateProduct,
     productPhotoUpdate,
     deleteProduct

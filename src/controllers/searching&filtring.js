@@ -31,7 +31,9 @@ try {
     )
 
 } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json(
+        new ApiError(500, "something went wrong")
+    );
 }
 
 })
@@ -73,7 +75,9 @@ const sortProduct = AsyncHandler(async (req, res) => {
             new ApiResponse(200, products, "product sort successfully")
         )
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong' });
+        res.status(500).json(
+            new ApiError(500, "somthing went wrong")
+        );
     }
 });
 

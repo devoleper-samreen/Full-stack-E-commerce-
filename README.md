@@ -1,6 +1,6 @@
 # E-commerce Backend Project
 
-This is the backend for an e-commerce application built using Express.js, mongodb. The backend provides APIs for user authentication, product management, and search functionalities with sorting capabilities.
+This is the backend for an e-commerce application built using Node.js, Express.js, mongodb. The backend provides APIs for user authentication, product management, and search functionalities with sorting capabilities.
 
 ## Features
 
@@ -9,6 +9,8 @@ This is the backend for an e-commerce application built using Express.js, mongod
 - Reset Password
 - Product Creation, Update, Read and Deletion
 - Search Functionality with Sorting
+- Add item in cart
+- Remove item from cart
 
 ## Technologies Used
 
