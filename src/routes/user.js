@@ -10,6 +10,6 @@ router.post("/logout", verifyjwt, logoutUser)
 router.post("/forget-password", forgetPassword)
 router.post("/reset-password", resetPassword)
 router.patch("/update-profile", verifyjwt, updateProfile)
-router.get("/view-profile",verifyjwt, viewUserProfile)
+router.get("/view-profile", verifyjwt, viewUserProfile)
 
 export default router
