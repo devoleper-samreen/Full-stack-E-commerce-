@@ -240,5 +240,52 @@ const resetPassword = AsyncHandler(async (req, res) => {
 
 })
 
-export {registerUser, loginUser, logoutUser, forgetPassword, resetPassword}
+//************************************************/
+
+const updateProfile = AsyncHandler(async (req, res) => {
+
+    const user = req.user
+
+    const { name, email, password, gender} = req.body
+
+    if (name){
+
+        user.name = name
+    }
+
+    if (email){
+        user.email = email
+    }
+
+    if (password){
+        user.password = password
+    }
+
+    if(gender){
+        user.gender = gender
+    }
+
+    await user.save({validateBeforeSave: false})
+
+    res.status(200).json(
+        new ApiResponse(200, user, 'Profile updated successfully')
+        )
+})
+
+//**************************************************/
+
+const viewUserProfile = AsyncHandler(async (req, res) => {
+
+    const user = req.user
+
+    if(!user){
+        throw new ApiError(400, "user profile not found")
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, user, "user profile view successfully")
+    )
+})
+
+export {registerUser, loginUser, logoutUser, forgetPassword, resetPassword, updateProfile, viewUserProfile}
 
