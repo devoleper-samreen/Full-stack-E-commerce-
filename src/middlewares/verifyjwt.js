@@ -3,7 +3,7 @@ import { AsyncHandler} from "../utils/AsyncHandler.js";
 import jwt from  "jsonwebtoken";
 import { User } from "../models/user.js";
 
-export const verifyjwt = AsyncHandler(async (req, res, next) => {
+const verifyjwt = AsyncHandler(async (req, res, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("bearer ", "")
 
@@ -20,12 +20,14 @@ export const verifyjwt = AsyncHandler(async (req, res, next) => {
             throw new ApiError(401, "invalid access token")
         }
 
-        req.user = user;
+        req.user = user
         next()
         
     } catch (error)
     {
-        throw new ApiError(401, error?.message || "invalid access token");
+        throw new ApiError(401, error?.message || "invalid access token")
         
     }
 })
+
+export{ verifyjwt }

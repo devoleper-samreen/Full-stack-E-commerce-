@@ -1,28 +1,31 @@
 import { User } from "../models/user.js"
+import { ApiError } from "../utils/ApiError.js"
+//import { ApiResponse } from "../utils/ApiResponse.js"
+import { AsyncHandler } from "../utils/AsyncHandler.js"
 
- const adminOnly = async (req, res, next) => {
+ const adminOnly =AsyncHandler ( async (req, res, next) => {
     
-    const { id } = req.query;
+    const { id } = req.query
 
     if(!id){
-        console.log("you are not login")
-        return next()
+        throw new ApiError(400, "you are not login")
     }
-
-    const user = await User.findById(id) 
     
+
+    const user = await User.findById(id)
+
     if(!user){
-        console.log("user not found")
-        return next()
+        throw new ApiError(400, "user not found")
     }
 
     if(user.role !== "admin"){
-        console.log("you are not admin")
-        return next()
+
+        throw new ApiError(400, "you are not admin")
+
     }
 
     next()
-}
+})
 
 export {adminOnly}
 

@@ -4,9 +4,20 @@ const categorySchema = new mongoose.Schema(
     {
         name:{
             type: String,
-            required: true
+            required: true,
+            unique: true
+        },
+        parent_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            default: null
         }
+    },
+    {
+        timestamps: true
     }
 )
 
-export const Category = mongoose.model("Category", categorySchema);
+const Category = mongoose.model("Category", categorySchema)
+
+export { Category }

@@ -23,11 +23,11 @@ const uploadOnCloudinary = async (localFilePath) => {
         //file uploaded seccessfully
         console.log("file upload on cloudinary")
         //fs.unlinkSync(localFilePath)
-        return result;
+        return result
 
     } catch (error) {
         //fs.unlinkSync(localFilePath)
-        console.error("Error uploading to Cloudinary:", error);
+        console.error("Error uploading to Cloudinary:", error)
         return null
     }
 }
@@ -48,9 +48,10 @@ const deleteOnCloudinary = async (publicId) => {
 
         console.log("file delete on cloudinary")
 
-        return result;
+        return result
+
       } catch (error) {
-        throw new Error(`Failed to delete file: ${error.message}`);
+        throw new Error(`Failed to delete file: ${error.message}`)
       }
 }
 

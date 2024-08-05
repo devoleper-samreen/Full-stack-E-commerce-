@@ -28,9 +28,11 @@ import userRoute  from "./routes/user.js"
 import productRoute from "./routes/product.js"
 import searchSortRoute from "./routes/search&sort.js"
 import cartRoute from "./routes/cart.js"
+import categoryRoute from "./routes/category.js"
 
 // using routes
 app.use("/api/v1/user", userRoute)
+app.use("/api/v1/category", categoryRoute)
 app.use("/api/v1/product", productRoute)
 app.use("/api/v1/product", searchSortRoute)
 app.use("/api/v1/product", addToCartRoute)

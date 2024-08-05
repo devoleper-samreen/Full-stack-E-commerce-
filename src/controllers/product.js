@@ -3,15 +3,28 @@ import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import { Product } from "../models/product.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import {Category} from "../models/category.js"
 
 const createProduct = AsyncHandler(async (req, res) => {
    try {
-     const {name, price, description, photo, quantity} = req.body
+     const {name, price, description, photo, quantity, categoryName} = req.body
  
-     if ( !(name || price || description || photo || quantity
+     if ( !(name || price || description || photo ||  quantity || categoryName
      )) {
          throw new ApiError(400, "All fields are required")
      }
+
+     const category = await Category.findOne(
+        { 
+            name: categoryName 
+        }
+    )
+
+    if (!category) {
+     res.status(400).json(
+         new ApiError(404, "category not found")
+    )
+    }
  
      const photoLocalPath = req.file?.path
  
@@ -31,7 +44,9 @@ const createProduct = AsyncHandler(async (req, res) => {
          price,
          description,
          quantity,
-         photo: image.url
+         photo: image.url,
+         category: category._id
+
      })
  
      if ( !product ) {
@@ -43,11 +58,12 @@ const createProduct = AsyncHandler(async (req, res) => {
      )
  
    } catch (error) {
-    console.error("Error in createProduct:", error);
-        res.status(500).json({
-            status: "error",
-            message: error.message,
-            details: error})
+    console.error("Error in createProduct:", error)
+
+        res.status(500).json(
+            
+            new ApiError(500, "internal server error")
+        )
     
    }
 })

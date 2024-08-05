@@ -30,10 +30,15 @@ const productSchema = new mongoose.Schema(
         },
         category: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Category"
+            ref: "Category",
+            required: true
         }
     },
-     {timestamp: true}
+    {
+        timestamp: true
+    }
 )
 
-export const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema)
+
+export { Product }
