@@ -30,6 +30,7 @@ import searchSortRoute from "./routes/search&sort.js"
 import cartRoute from "./routes/cart.js"
 import categoryRoute from "./routes/category.js"
 import profileRoute from "./routes/user.js"
+import orderRoutes from "./routes/order.js"
 
 // using routes
 app.use("/api/v1/user", userRoute)
@@ -38,6 +39,7 @@ app.use("/api/v1/product", productRoute)
 app.use("/api/v1/search", searchSortRoute)
 app.use("/api/v1/cart", cartRoute)
 app.use("/api/v1/profile", profileRoute)
+app.use("/api/v1/orders", orderRoutes)
 
 //app listining
 app.listen(port, () => {
