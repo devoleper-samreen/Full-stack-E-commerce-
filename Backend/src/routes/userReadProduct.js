@@ -8,4 +8,4 @@ router.get('/latest-product', readLatestProduct)
 
 router.get('/all-product', readAllProduct)
 
-export {router}
+export default router

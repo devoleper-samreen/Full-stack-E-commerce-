@@ -4,6 +4,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {User} from "../models/user.js"
 import nodemailer from "nodemailer"
 import bcrypt from "bcrypt"
+import crypto from "crypto"
 
 
 const generateAccessAndRefereshToken = async (userId) => {
@@ -158,15 +159,22 @@ const forgetPassword = AsyncHandler(async (req, res) => {
     const {email} = req.body
     
     const user = await User.findOne({email})
+    console.log("yes1")
 
     if(!user){
-        throw new ApiError(400, "user not found")
+        throw new ApiError(404, "user not found")
     }
+
+    console.log("yes2")
 
     const token = crypto.randomBytes(32).toString("hex")
 
+    console.log("yes3")
+
     user.resetPasswordToken = token
     user.resetPasswordExpires = Date.now() + 3600000
+
+    console.log("yes4")
 
     await user.save({validateBeforeSave: false})
 
@@ -192,7 +200,8 @@ const forgetPassword = AsyncHandler(async (req, res) => {
 
       transporter.sendMail(mailOptions, (err) => {
         if (err) {
-           res.status(500).json(
+            console.log(err)
+          return res.status(500).json(
             new ApiError(500, "Error in sending email")            
         )
         }

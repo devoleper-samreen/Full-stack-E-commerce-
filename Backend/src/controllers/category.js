@@ -5,23 +5,28 @@ import {Category} from "../models/category.js"
 
 const createCategory = AsyncHandler(async (req, res) => {
 
-    try {
         const { name, parent_id } = req.body
 
-        const category = new Category({ name, parent_id })
+        if(!name){
+            throw new ApiError(400, "category name is required")
+        }
 
-        await category.save({validateBeforeSave: false})
+        const category = await Category.create(
+            {
+                name,
+                parent_id 
+            }
+        )
+
+       const savedCategory =  await category.save({validateBeforeSave: false})
+
+       if(!savedCategory){
+        throw new ApiError(400, "category not creted")
+       }
 
         res.status(201).json(
             new ApiResponse(201, category, 'Category created successfully')
             )
-
-      } catch (error)
-      {
-        res.status(400).json(
-            new ApiError(400, "Error creating category")
-        )
-      }
 
 })
 

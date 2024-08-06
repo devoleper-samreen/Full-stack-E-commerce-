@@ -6,7 +6,7 @@ import {User} from "../models/user.js"
 import {Cart} from "../models/cart.js"
 
 const addToCart = AsyncHandler(async (req, res) => {
-
+    
     const {userId, productId, quantity} = req.body
 
     const user = await User.findById(userId)
@@ -21,7 +21,7 @@ const addToCart = AsyncHandler(async (req, res) => {
         throw new ApiError(404, "product not found")
     }
 
-    const cart = await Cart.findOne({user: userId})
+    let cart = await Cart.findOne({user: userId})
 
     if (!cart) {
         cart = new Cart({ user: userId, items: [] });
@@ -40,7 +40,7 @@ const addToCart = AsyncHandler(async (req, res) => {
         )
     }
 
-   const added =  await user.save({validateBeforeSave: false})
+   const added =  await cart.save({validateBeforeSave: false})
 
    if(!added){
     throw new ApiError(400, "product not added error")
@@ -55,10 +55,10 @@ const addToCart = AsyncHandler(async (req, res) => {
 //*******************************************/
 
 const removeFromCart = AsyncHandler(async (req, res) => {
+   
+    const  {userId, productId, quantity} = req.body
 
-    const  {userId, productId} = req.body
-
-    const cart = await Cart.findOne({user: userId})
+    let cart = await Cart.findOne({user: userId})
 
     if (!cart) {
         throw new ApiError(404, "Cart not found");
@@ -70,7 +70,7 @@ const removeFromCart = AsyncHandler(async (req, res) => {
         throw new ApiError(404, "Product not found in cart");
     }
 
-    cart.items = await cart.items.filter(item => item.product.toString() !== productId)
+    cart.items = cart.items.filter(item => item.product.toString() !== productId)
 
     await cart.save({validateBeforeSave: false})
 

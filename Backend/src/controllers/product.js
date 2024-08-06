@@ -6,7 +6,7 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {Category} from "../models/category.js"
 
 const createProduct = AsyncHandler(async (req, res) => {
-   try {
+
      const {name, price, description, photo, quantity, categoryName} = req.body
  
      if ( !(name || price || description || photo ||  quantity || categoryName
@@ -20,10 +20,9 @@ const createProduct = AsyncHandler(async (req, res) => {
         }
     )
 
-    if (!category) {
-     res.status(400).json(
-         new ApiError(404, "category not found")
-    )
+    if (!category){
+
+        throw new ApiError(404, "category not found")
     }
  
      const photoLocalPath = req.file?.path
@@ -31,7 +30,6 @@ const createProduct = AsyncHandler(async (req, res) => {
      if ( !photoLocalPath) {
          throw new ApiError(400, "local path nahi mila")
      }
-     console.log(photoLocalPath)
  
      const image = await uploadOnCloudinary(photoLocalPath)
  
@@ -45,7 +43,7 @@ const createProduct = AsyncHandler(async (req, res) => {
          description,
          quantity,
          photo: image.url,
-         category: category._id
+         category: category.name
 
      })
  
@@ -57,15 +55,6 @@ const createProduct = AsyncHandler(async (req, res) => {
          new ApiResponse(200, product, "product create successfully")
      )
  
-   } catch (error) {
-    console.error("Error in createProduct:", error)
-
-        res.status(500).json(
-            
-            new ApiError(500, "internal server error")
-        )
-    
-   }
 })
 
 //******************************************//
@@ -237,9 +226,9 @@ const productPhotoUpdate = AsyncHandler(async (req, res) => {
 
 const deleteProduct = AsyncHandler(async (req, res) => {
 
-    const {productId} = req.params
+    const {productId} = req.body
 
-    if ( productId) {
+    if ( !productId) {
         throw new ApiError(400, "please provide product id")
     }
 
@@ -263,7 +252,7 @@ const deleteProduct = AsyncHandler(async (req, res) => {
 
 
      res.status(200).json(
-        new ApiResponse(200, deletedProduct, "product update successfully")
+        new ApiResponse(200, deletedProduct, "product deleted successfully")
      )
    
 })
