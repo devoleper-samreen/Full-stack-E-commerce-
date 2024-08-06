@@ -1,51 +1,105 @@
+// import express from "express";
+// import cors from "cors"
+// import dotenv from "dotenv"
+// import { connectDB } from "./db/db.js";
+// import cookieParser from "cookie-parser";
+
+// //env setup
+// dotenv.config(
+//     {
+//         path: "./.env"
+//     }
+// )
+
+// //basic setup
+// const port =  process.env.PORT || 4000;
+// const app = express();
+// app.use(express.json())
+// app.use(cors(
+//     {
+//         origin: process.env.CORS_ORIGIN,
+//         credentials: true
+//     }
+// ))
+// app.use(cookieParser())
+
+// // importing routes
+// import userRoute  from "./routes/user.js"
+// import productRoute from "./routes/product.js"
+// import searchSortRoute from "./routes/search&sort.js"
+// import cartRoute from "./routes/cart.js"
+// import categoryRoute from "./routes/category.js"
+// import profileRoute from "./routes/user.js"
+// import orderRoutes from "./routes/order.js"
+
+// // using routes
+// app.use("/api/v1/user", userRoute)
+// app.use("/api/v1/category", categoryRoute)
+// app.use("/api/v1/product", productRoute)
+// app.use("/api/v1/search", searchSortRoute)
+// app.use("/api/v1/cart", cartRoute)
+// app.use("/api/v1/profile", profileRoute)
+// app.use("/api/v1/orders", orderRoutes)
+
+// //app listining
+// app.listen(port, () => {
+//     console.log(`server is working on http://localhost:${port}`)
+// })
+
+// // connect DB
+// connectDB()
+
 import express from "express";
-import cors from "cors"
-import dotenv from "dotenv"
+import cors from "cors";
+import dotenv from "dotenv";
 import { connectDB } from "./db/db.js";
 import cookieParser from "cookie-parser";
+import userRoute from "./routes/user.js";
+import productRoute from "./routes/product.js";
+import searchSortRoute from "./routes/search&sort.js";
+import cartRoute from "./routes/cart.js";
+import categoryRoute from "./routes/category.js";
 
-//env setup
-dotenv.config(
-    {
-        path: "./.env"
-    }
-)
+// Environment Setup
+dotenv.config({ path: "./.env" });
 
-//basic setup
-const port =  process.env.PORT || 4000;
+// Basic Setup
+const port = process.env.PORT || 4000;
 const app = express();
-app.use(express.json())
-app.use(cors(
-    {
-        origin: process.env.CORS_ORIGIN,
-        credentials: true
-    }
-))
-app.use(cookieParser())
 
-// importing routes
-import userRoute  from "./routes/user.js"
-import productRoute from "./routes/product.js"
-import searchSortRoute from "./routes/search&sort.js"
-import cartRoute from "./routes/cart.js"
-import categoryRoute from "./routes/category.js"
-import profileRoute from "./routes/user.js"
-import orderRoutes from "./routes/order.js"
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
-// using routes
-app.use("/api/v1/user", userRoute)
-app.use("/api/v1/category", categoryRoute)
-app.use("/api/v1/product", productRoute)
-app.use("/api/v1/search", searchSortRoute)
-app.use("/api/v1/cart", cartRoute)
-app.use("/api/v1/profile", profileRoute)
-app.use("/api/v1/orders", orderRoutes)
+// CORS Setup
+app.use(cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true
+}));
 
-//app listining
+// Root Route
+app.get('/', (req, res) => {
+  res.send('Welcome to the E-commerce API!');
+});
+
+// Importing Routes
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/category", categoryRoute);
+app.use("/api/v1/product", productRoute);
+app.use("/api/v1/search", searchSortRoute);
+app.use("/api/v1/cart", cartRoute);
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// Server Listening
 app.listen(port, () => {
-    console.log(`server is working on http://localhost:${port}`)
-})
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
-// connect DB
-connectDB()
+// Connect DB
+connectDB();
 
