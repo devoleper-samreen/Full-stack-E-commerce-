@@ -285,7 +285,7 @@ const updateProfile = AsyncHandler(async (req, res) => {
 
 const viewUserProfile = AsyncHandler(async (req, res) => {
 
-    const user = req.query
+    const user = req.user
 
     if(!user){
         throw new ApiError(404, "user profile not found")

@@ -9,6 +9,7 @@ import searchSortRoute from "./routes/search&sort.js";
 import cartRoute from "./routes/cart.js";
 import categoryRoute from "./routes/category.js";
 import readProductRoute from "./routes/userReadProduct.js"
+import orderRoute from "./routes/order.js"
 
 // Environment Setup
 dotenv.config({ path: "./.env" });
@@ -39,6 +40,7 @@ app.use("/api/v1/product", productRoute);
 app.use("/api/v1/read", readProductRoute)
 app.use("/api/v1/search", searchSortRoute);
 app.use("/api/v1/cart", cartRoute);
+app.use("/api/v1/order", orderRoute);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

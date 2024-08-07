@@ -7,7 +7,8 @@ import {Order} from "../models/order.js"
 
 const createOrder = AsyncHandler(async (req, res) => {
 
-    const {userId, items} = req.body
+    const {userId} = req.query
+    const {items} = req.body
 
     const user = await User.findById(userId)
 
@@ -29,7 +30,7 @@ const createOrder = AsyncHandler(async (req, res) => {
     }
 
     //create order
-    const order = new Order(
+    const order = await Order.create(
         {
             user: userId,
             items: items.map(item => (

@@ -115,25 +115,15 @@ const readAllProduct = AsyncHandler(async (req, res) => {
 //**********************************************/
 
 const updateProduct = AsyncHandler(async (req, res) => {
-    const {productId} = req.params
+
+    const {productId} = req.query
+
     const {name, description, price, quantity} = req.body
-
-    if ( productId) {
-        throw new ApiError(400, "please provide product id")
-    }
-
-    if ( name || description || price || quantity || photo) {
-        throw new ApiError(400, "please provide update data")
-    }
 
     const product = await Product.findById(productId)
 
     if ( !product) {
         throw new ApiError(400, "product nahi mila")
-    }
-
-    if (product.owner !== req.user ) {
-        throw new ApiError(400, "you are not owner")
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -143,7 +133,7 @@ const updateProduct = AsyncHandler(async (req, res) => {
             description,
             price,
             quantity
-        }
+        },{ new: true, runValidators: true }
      )
 
      if ( !updatedProduct) {
@@ -166,25 +156,13 @@ const updateProduct = AsyncHandler(async (req, res) => {
 
 const productPhotoUpdate = AsyncHandler(async (req, res) => {
 
-    const {productId} = req.params
+    const {productId} = req.query
     const {photo} = req.body
-
-    if ( productId) {
-        throw new ApiError(400, "please provide product id")
-    }
-
-    if ( ! photo) {
-        throw new ApiError(400, "please provide photo")
-    }
 
     const product = await Product.findById(productId)
 
-    if ( !product) {
+    if (!product) {
         throw new ApiError(400, "product nahi mila")
-    }
-
-    if (product.owner !== req.user ) {
-        throw new ApiError(400, "you are not owner")
     }
 
     const photoLocalPath = req.file?.path
