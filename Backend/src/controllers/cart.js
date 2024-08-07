@@ -80,4 +80,20 @@ const removeFromCart = AsyncHandler(async (req, res) => {
 
 })
 
-export{addToCart, removeFromCart}
+//***********************************************/
+
+const getCartItems = AsyncHandler(async (req, res) => {
+
+    const allItems = await Cart.find()
+
+    if ( !allItems ){
+        throw new ApiError(404, "cart items not found")
+    }
+
+    res.status(200).json(
+        new ApiResponse(200, allItems, "cart item found successfully")
+    )
+
+})
+
+export{addToCart, removeFromCart, getCartItems}

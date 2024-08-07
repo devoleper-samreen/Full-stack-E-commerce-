@@ -5,13 +5,11 @@ import { Product } from "../models/product.js"
 
 const searchProduct = AsyncHandler(async (req, res) => {
 
-const { name } = req.body;
+const { name } = req.body
 
 if (!name) {
     throw new ApiError(400, "name is required")
 }
-
-try {
     // Name ke basis pe products ko search karna
     const products = await Product.find(
         { 
@@ -30,56 +28,48 @@ try {
         new ApiResponse(200, products, "product search successfully")
     )
 
-} catch (error) {
-    res.status(500).json(
-        new ApiError(500, "something went wrong")
-    );
-}
-
 })
 
 //************************************************/
 
 const sortProduct = AsyncHandler(async (req, res) => {
-    const { sortby, maxprice, category } = req.body;
 
-    let filter = {};
-    let sort = {};
+    const { sortby, maxprice, category } = req.body
+
+    let filter = {}
+    let sort = {}
 
     // Filter by max price
     if (maxprice) {
-        filter.price = { $lte: Number(maxprice) };
+        filter.price = { $lte: Number(maxprice) }
     }
 
     // Filter by category
     if (category) {
-        filter.category = category;
+        filter.category = category
     }
 
     // Sorting logic
-    if (sortby === 'lowtohigh') {
-        sort.price = 1;
-    } else if (sortby === 'hightolow') {
-        sort.price = -1;
+    if(sortby){
+        if (sortby === 'lowtohigh')
+            {
+                sort.price = 1
+            }else if (sortby === 'hightolow') {
+                sort.price = -1
+            }
     }
 
-    try {
         // Apply filter and sorting
-        const products = await Product.find(filter).sort(sort);
+        const products = await Product.find(filter).sort(sort)
 
         if ( !products ) {
-            throw new ApiError(401, "product not found" )
+            throw new ApiError(404, "product not found" )
         }
 
         res.status(200).json(
             new ApiResponse(200, products, "product sort successfully")
         )
-    } catch (error) {
-        res.status(500).json(
-            new ApiError(500, "somthing went wrong")
-        );
-    }
-});
+})
 
 export {searchProduct, sortProduct}
 

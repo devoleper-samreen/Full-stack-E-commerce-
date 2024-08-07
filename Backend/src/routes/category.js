@@ -1,11 +1,11 @@
 import express from "express"
 import { adminOnly } from "../middlewares/isAdmin.js"
-import { createCategory } from "../controllers/category.js"
+import { createCategory , deleteCategory, getAllCategory} from "../controllers/category.js"
 
 const router = express.Router()
 
-router.use(adminOnly)
-
-router.post('/create-category', createCategory)
+router.post('/create-category', adminOnly, createCategory)
+router.delete('/delete-category', adminOnly, deleteCategory)
+router.get("/get-category", getAllCategory)
 
 export default router

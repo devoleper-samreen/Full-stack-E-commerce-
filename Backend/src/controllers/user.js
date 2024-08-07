@@ -285,10 +285,10 @@ const updateProfile = AsyncHandler(async (req, res) => {
 
 const viewUserProfile = AsyncHandler(async (req, res) => {
 
-    const user = req.user
+    const user = req.query
 
     if(!user){
-        throw new ApiError(400, "user profile not found")
+        throw new ApiError(404, "user profile not found")
     }
 
     res.status(200).json(
